@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday, Diva</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1c1530;--bg2:#2b1f47;--ink:#fff3e4;--muted:#c9b9e0;--flame:#ffb347;--pink:#f7bfd0;--cake:#f2d3a6;--card:#fff3e4;--cardink:#2b1f47;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1530}}
+:root[data-theme="dark"]{--bg:#1c1530}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 20%,var(--bg2),var(--bg) 70%);color:var(--ink);font-family:Nunito,system-ui,sans-serif;text-align:center;overflow-x:hidden}
+main{max-width:620px;margin:0 auto;padding:28px 20px 60px}
+h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:clamp(2.2rem,8vw,3.6rem);line-height:1.05;margin:8px 0 6px}
+h1 em{font-style:italic;color:var(--pink)}
+.sub{color:var(--muted);margin:0 0 6px;min-height:1.5em}
+[contenteditable=true]{outline:2px dashed var(--flame);outline-offset:4px;border-radius:6px;cursor:text}
+#cake{width:min(340px,86vw);margin:14px auto 0;display:block;touch-action:manipulation}
+.flame{transform-origin:50% 100%;animation:fl .35s infinite alternate ease-in-out;cursor:pointer}
+@keyframes fl{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.88,1.12) rotate(3deg)}}
+.out .flame{display:none}
+.smoke{opacity:0;stroke:#d8cde8;fill:none;stroke-width:2;stroke-linecap:round}
+.puff .smoke{animation:sm 2.2s ease-out}
+@keyframes sm{0%{opacity:.9;transform:translateY(0)}100%{opacity:0;transform:translateY(-34px)}}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+button{font:600 1rem Nunito,sans-serif;border:0;border-radius:999px;padding:12px 22px;cursor:pointer;background:var(--flame);color:#3a1f00}
+button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--muted)}
+button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#hint{color:var(--muted);font-size:.95rem;min-height:1.4em}
+.wish{font-family:Fraunces,Georgia,serif;font-style:italic;font-size:1.15rem;line-height:1.6;max-width:38ch;margin:22px auto 0}
+.invite{background:var(--card);color:var(--cardink);border-radius:18px;padding:30px 24px;margin:34px 0 0;text-align:left;box-shadow:0 18px 50px rgba(0,0,0,.35);transform:rotate(-1deg)}
+.invite h2{font-family:Fraunces,Georgia,serif;font-size:1.7rem;margin:0 0 4px;text-align:center}
+.invite p.lead{text-align:center;margin:0 0 20px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:12px 18px}
+dt{font-weight:600;color:#8a5a7a}
+dd{margin:0;overflow-wrap:anywhere}
+.edit{margin-top:26px}
+.bar{display:flex;justify-content:center;margin-top:12px}
+#c{position:fixed;inset:0;pointer-events:none;z-index:5}
+.ask{margin:30px 0 0}.ask h2{font-family:Fraunces,Georgia,serif;font-size:1.6rem;line-height:1.2;margin:0 0 18px}.yn{display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap}#yes{transition:font-size .3s,padding .3s;font-size:1.1rem;padding:12px 28px;max-width:100%}#no{transition:transform .3s}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<main>
+  <p class="sub" id="from">O.M.G! Dah 23?!</p>
+  <h1>Happy Birthday,<br><em id="name">Diva</em>!</h1>
+
+  <svg id="cake" viewBox="0 0 340 300" role="img" aria-label="Birthday cake with five lit candles. Tap a flame or press Blow to put them out.">
+    <ellipse cx="170" cy="278" rx="150" ry="14" fill="#000" opacity=".25"/>
+    <rect x="40" y="170" width="260" height="104" rx="14" fill="var(--cake)"/>
+    <rect x="40" y="170" width="260" height="30" rx="14" fill="var(--pink)"/>
+    <path d="M40 190 q20 28 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 v-10 h-240z" fill="var(--pink)"/>
+    <rect x="40" y="226" width="260" height="10" fill="#e5b97f"/>
+    <g id="candles"></g>
+  </svg>
+
+  <div id="hint">Make a wish, then blow out the candles!</div>
+  <div class="btns">
+    <button id="mic">🎤 Blow into the mic</button>
+    <button id="tap" class="ghost">Tap to blow</button>
+    <button id="relight" class="ghost" hidden>Relight candles</button>
+  </div>
+
+  <p class="wish" id="wish">Happy Birthday Broski!! Dah matang doh 23, 7 more years dah nak 30 tahun. Ya Alah, jadikanlah Jad anak yang soleh, hidupnya diberkati, dapat pekerjaan yang memudahkan dia untuk solat, gaji yang berkat, colleague yang baik, workload yang balance dan Jad pun baik n ideal untuk company tu. Jadikanlah Jad disayangi, dilindungi dan dihormati kemana pun Jad pergi. Aaaamin.</p>
+
+  <section class="ask" id="ask" hidden>
+    <h2 id="askq">Are you interested in joining the dinner celebration?</h2>
+    <div class="yn"><button id="yes">Yes! 🎉</button><button id="no" class="ghost">No</button></div>
+  </section>
+
+  <section class="invite" id="invite" hidden aria-label="Dinner invitation">
+    <h2>You’re invited to dinner</h2>
+    <p class="lead" id="lead" contenteditable="false">Come celebrate with good food and good company.</p>
+    <dl>
+      <dt>Date</dt><dd>Saturday, 14 November 2026 (14/11/2026)</dd>
+      <dt>Meet at</dt><dd id="time" contenteditable="false">7:50 PM</dd>
+      <dt>Place</dt><dd id="place" contenteditable="false">Venue to be announced</dd>
+      <dt>RSVP</dt><dd id="rsvp" contenteditable="false">Reply to the host by 10 November</dd>
+    </dl>
+  </section>
+
+  <div class="bar">
+    
+  </div>
+</main>
+
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg', cg=document.getElementById('candles'), cake=document.getElementById('cake');
+  var xs=[85,127,170,213,255], cols=['#7fd1c7','#f7bfd0','#ffd36e','#9fb8ff','#f7a08c'];
+  xs.forEach(function(x,i){
+    var g=document.createElementNS(NS,'g');
+    g.innerHTML='<rect x="'+(x-6)+'" y="118" width="12" height="54" rx="3" fill="'+cols[i]+'"/><rect x="'+(x-6)+'" y="132" width="12" height="6" fill="#fff" opacity=".45"/>'+
+      '<path class="smoke" d="M'+x+' 112 q-8 -10 0 -20 t0 -20"/>'+
+      '<g class="flame"><ellipse cx="'+x+'" cy="100" rx="9" ry="15" fill="#ff9a2e"/><ellipse cx="'+x+'" cy="104" rx="5" ry="9" fill="#fff0a8"/></g>';
+    cg.appendChild(g);
+  });
+
+  var AC=null, lit=true;
+  function ctx(){ if(!AC){ AC=new (window.AudioContext||window.webkitAudioContext)(); } if(AC.state==='suspended')AC.resume(); return AC; }
+
+  // Piano-like tone: harmonics with a fast attack and long decay
+  function note(f,t,d){
+    var a=ctx(), out=a.createGain(), lp=a.createBiquadFilter();
+    lp.type='lowpass'; lp.frequency.value=3200;
+    out.gain.setValueAtTime(0,t); out.gain.linearRampToValueAtTime(.32,t+.008);
+    out.gain.exponentialRampToValueAtTime(.0005,t+d*1.9);
+    [[1,'triangle',1],[2,'sine',.35],[3,'sine',.12],[4,'sine',.05]].forEach(function(h){
+      var o=a.createOscillator(), g=a.createGain();
+      o.type=h[1]; o.frequency.value=f*h[0]; g.gain.value=h[2];
+      o.connect(g); g.connect(lp); o.start(t); o.stop(t+d*2);
+    });
+    lp.connect(out); out.connect(a.destination);
+  }
+  var F={C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99};
+  var song=[['G4',.5],['G4',.5],['A4',1],['G4',1],['C5',1],['B4',2],
+            ['G4',.5],['G4',.5],['A4',1],['G4',1],['D5',1],['C5',2],
+            ['G4',.5],['G4',.5],['G5',1],['E5',1],['C5',1],['B4',1],['A4',1.5],
+            ['F5',.5],['F5',.5],['E5',1],['C5',1],['D5',1],['C5',2.5]];
+  var timer;
+  function play(){
+    var a=ctx(), t=a.currentTime+.05, beat=.46;
+    song.forEach(function(n){ note(F[n[0]],t,n[1]*beat); t+=n[1]*beat; });
+  }
+
+  // Confetti
+  var cv=document.getElementById('c'), cx=cv.getContext('2d'), P=[], raf;
+  function size(){cv.width=innerWidth;cv.height=innerHeight} size(); addEventListener('resize',size);
+  function confetti(){
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    for(var i=0;i<140;i++)P.push({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-2,s:4+Math.random()*6,c:cols[i%5],r:Math.random()*6});
+    cancelAnimationFrame(raf); (function loop(){
+      cx.clearRect(0,0,cv.width,cv.height);
+      P=P.filter(function(p){p.vy+=.3;p.x+=p.vx;p.y+=p.vy;p.r+=.2;return p.y<innerHeight+20});
+      P.forEach(function(p){cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);cx.restore()});
+      if(P.length)raf=requestAnimationFrame(loop);
+    })();
+  }
+
+  var hint=document.getElementById('hint'), relight=document.getElementById('relight'), micBtn=document.getElementById('mic'), tapBtn=document.getElementById('tap');
+  var stream=null, listening=false;
+  function stopMic(){ listening=false; if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null} }
+
+  var ask=document.getElementById('ask'), askq=document.getElementById('askq'), yes=document.getElementById('yes'), no=document.getElementById('no'), invite=document.getElementById('invite'), noCount=0;
+  var qs=['Are you interested in joining the dinner celebration?','Really? Are you sure? Please say yes 🥺','Think about the food… will you come?','Okay, one more chance. Dinner celebration?','The Yes button is getting bigger for a reason 😄','You can’t escape. Just press Yes!'];
+  function showAsk(){ ask.hidden=false; ask.scrollIntoView({behavior:'smooth',block:'center'}); }
+  function resetAsk(){ ask.hidden=true; invite.hidden=true; noCount=0; askq.textContent=qs[0]; yes.style.fontSize=''; yes.style.padding=''; no.style.transform=''; }
+  no.onclick=function(){
+    noCount++;
+    askq.textContent=qs[noCount%qs.length||1];
+    yes.style.fontSize=Math.min(1.1+noCount*.45,3.4)+'rem';
+    yes.style.padding=Math.min(12+noCount*5,36)+'px '+Math.min(28+noCount*10,60)+'px';
+    no.style.transform='scale('+Math.max(.6,1-noCount*.08)+')';
+  };
+  yes.onclick=function(){
+    ask.hidden=true; invite.hidden=false; confetti();
+    invite.scrollIntoView({behavior:'smooth',block:'center'});
+  };
+  function blowOut(){
+    if(!lit)return; lit=false; stopMic();
+    cake.classList.add('out','puff');
+    hint.textContent='Your wish is on its way. Happy Birthday! 🎂';
+    relight.hidden=false; micBtn.hidden=true; tapBtn.hidden=true;
+    play(); confetti(); setTimeout(showAsk,1500);
+  }
+  function relightAll(){
+    lit=true; resetAsk(); cake.classList.remove('out','puff'); hint.textContent='Make a wish, then blow out the candles!';
+    relight.hidden=true; micBtn.hidden=false; tapBtn.hidden=false;
+  }
+
+  function startMic(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){hint.textContent='Microphone not available here. Tap to blow instead.';return}
+    ctx();
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
+      stream=s; listening=true; hint.textContent='Listening… take a deep breath and blow!';
+      var a=ctx(), src=a.createMediaStreamSource(s), an=a.createAnalyser(); an.fftSize=512;
+      src.connect(an); var d=new Uint8Array(an.fftSize), hits=0;
+      (function check(){
+        if(!listening)return;
+        an.getByteTimeDomainData(d); var sum=0;
+        for(var i=0;i<d.length;i++){var v=(d[i]-128)/128;sum+=v*v}
+        var rms=Math.sqrt(sum/d.length);
+        hits = rms>.18 ? hits+1 : Math.max(0,hits-1);
+        if(hits>6){blowOut();return}
+        requestAnimationFrame(check);
+      })();
+    }).catch(function(){hint.textContent='Microphone blocked. Tap to blow instead.'});
+  }
+
+  micBtn.onclick=startMic;
+  tapBtn.onclick=blowOut;
+  relight.onclick=relightAll;
+  cg.addEventListener('click',blowOut);
+
+  // Editing
+  var ids=['from','name','wish','lead','time','place','rsvp'], editBtn=document.getElementById('edit'), editing=false;
+  if(editBtn)editBtn.onclick=function(){
+    editing=!editing;
+    ids.forEach(function(i){document.getElementById(i).contentEditable=editing});
+    editBtn.textContent=editing?'✅ Save changes':'✏️ Edit wish & details';
+    if(editing){document.getElementById('wish').focus()}
+    else{ var n=document.getElementById('name').textContent.trim(); if(!n)document.getElementById('name').textContent='Friend'; }
+  };
+})();
+</script>
+</body>
+</html>
